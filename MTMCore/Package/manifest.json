@@ -2,7 +2,7 @@
   "name": "MTM Core",
   "description": "Assorted small mods for private server",
   "version_number": "0.1.0",
-  "website_url": "https://github.com/mightytightymods/mtm-difficulty",
+  "website_url": "https://github.com/mightytightymods/mtm-core",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2350",
     "ValheimModding-Jotunn-2.30.0"

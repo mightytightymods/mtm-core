@@ -98,15 +98,14 @@ namespace MTM
                 new ConfigDescription("Split Amount", splitAmountRange));
             
             // Skill Book Limits
+            // Custom tweaks to trainers in the More_World_Location_AIO mod.
             var skillRange = new AcceptableValueRange<int>(1, 100);
-            SkillBookBreakpoint = Config.Bind("Skill Book Limits", "SkillBookBreakpoint", 40,
+            SkillBookBreakpoint = Config.Bind("Skill Book Limits", "SkillBookBreakpoint", 100,
                 new ConfigDescription("Skill level past which costs double", skillRange, adminOnly));
-            SkillBookCap  = Config.Bind("Skill Book Limits", "SkillBookCap", 60,
+            SkillBookCap  = Config.Bind("Skill Book Limits", "SkillBookCap", 100,
                 new ConfigDescription("Max skill level trained with a skill book", skillRange, adminOnly));
             
             harmony.PatchAll();
-            
-            // SwiftfootMead.Init();
             
             Logger.LogInfo("MTM Difficulty initialized.");
         }

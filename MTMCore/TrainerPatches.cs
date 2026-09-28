@@ -6,15 +6,13 @@ namespace MTM
 {
     /// <summary>
     /// Prevents a skill book from being consumed at all once the target
-    /// skill is already at the 75 cap, by hooking the same gate the game
+    /// skill is already at the cap, by hooking the same gate the game
     /// itself uses (Player.CanConsumeItem) rather than letting the item
     /// get eaten and then doing nothing.
     /// </summary>
     [HarmonyPatch(typeof(Player), nameof(Player.CanConsumeItem))]
     internal static class SkillBookConsumeGatePatch
     {
-        private const float Cap = 75f;
-
         private static void Postfix(Player __instance, ItemDrop.ItemData item, ref bool __result)
         {
             if (!__result) return; // already blocked for some other vanilla reason
@@ -23,10 +21,10 @@ namespace MTM
                 return; // not one of our skill books
 
             Skills.Skill skill = __instance.GetSkills().GetSkill(bookEffect.skillType);
-            if (skill.m_level >= Cap)
+            if (skill.m_level >= Plugin.SkillBookCap.Value)
             {
                 __instance.Message(MessageHud.MessageType.Center,
-                    "$skill_" + bookEffect.skillType.ToString().ToLower() + " is already capped at " + (int)Cap);
+                    "$skill_" + bookEffect.skillType.ToString().ToLower() + " is already capped at " + Plugin.SkillBookCap.Value);
                 __result = false;
             }
         }
@@ -34,25 +32,20 @@ namespace MTM
 
     /// <summary>
     /// Patches MWL's SkillBook_SE.ApplySkillBook() to:
-    ///   a) hard-cap skill training from books at 75 (belt-and-braces backstop;
+    ///   a) hard-cap skill training from books to a configured value (belt-and-braces backstop;
     ///      SkillBookConsumeGatePatch above should prevent reaching this at all
     ///      once capped, since the item won't be consumable)
-    ///   b) make the 50-75 range cost exactly 2x as many "book points" as 0-50
-    ///   c) preserve fractional skill progress correctly across level-ups in
-    ///      BOTH ranges, instead of leaving m_accumulator's raw value stale
-    ///      relative to a level-up requirement that may have just changed
-    ///      (e.g. 10.2 -> 11.2, not a silently-drifted approximation of it)
+    ///   b) make training in the breakpoint range cost 2x as many "book points"
+    ///   c) preserve fractional skill progress correctly across level-ups
     ///
     /// Requires a Jotunn/BepInEx publicized reference to
-    /// More_World_Locations_AIO.dll and assembly_valheim.dll (confirmed:
-    /// m_accumulator is public, GetNextLevelRequirement is private but
-    /// publicized, so both are used directly below).
+    /// More_World_Locations_AIO.dll and assembly_valheim.dll
     /// </summary>
     [HarmonyPatch(typeof(SkillBook_SE), "ApplySkillBook")]
     internal static class SkillBookCapPatch
     {
-        private const float FullRateCredit = 1f;   // below 50: 1 point = 1 full level
-        private const float HalfRateCredit = 0.5f; // 50-75: 1 point = half a level (2x cost)
+        private const float FullRateCredit = 1f;   // below breakpoint: 1 point = 1 full level
+        private const float HalfRateCredit = 0.5f; // over breakpoint: 1 point = half a level (2x cost)
 
         private static bool Prefix(SkillBook_SE __instance, Player ___player, ref bool ___shouldRemove)
         {
