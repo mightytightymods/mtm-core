@@ -13,7 +13,7 @@ namespace MTM
     {
         public const string PluginGUID = "mightytightymods.mtm-core";
         public const string PluginName = "MTMCore";
-        public const string PluginVersion = "1.0.0";
+        public const string PluginVersion = "0.1.0";
         
         // Difficulty
         public static ConfigEntry<float> CreatureHealthMult;
