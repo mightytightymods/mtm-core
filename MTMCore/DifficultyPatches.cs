@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using HarmonyLib;
 
-namespace MTMDifficulty
+namespace MTM
 {
     [HarmonyPatch(typeof(Character), nameof(Character.SetupMaxHealth))]
     public static class CharacterSetupMaxHealthPatch
@@ -20,15 +20,15 @@ namespace MTMDifficulty
             var stars = __instance.GetLevel() - 1;
             var isBoss = __instance.m_boss;
 
-            var mult = isBoss ? MTMDifficulty.BossHealthMult.Value : MTMDifficulty.CreatureHealthMult.Value;
+            var mult = isBoss ? Plugin.BossHealthMult.Value : Plugin.CreatureHealthMult.Value;
             // Vanilla health scales at 100% per star
-            var starBonus = 1f + (stars * 1.0f * MTMDifficulty.PerStarHealthMult.Value);
+            var starBonus = 1f + (stars * 1.0f * Plugin.PerStarHealthMult.Value);
             var finalHealth = baseHealth * mult * starBonus;
 
             __instance.SetMaxHealth(finalHealth);
 
-            if (MTMDifficulty.VerboseLogging.Value)
-                MTMDifficulty.Log.LogInfo(
+            if (Plugin.VerboseLogging.Value)
+                Plugin.Log.LogInfo(
                     $"[HEALTH PATCHED] {__instance.name} | stars={stars} isBoss={isBoss} " +
                     $"baseHealth={baseHealth:F1} mult={mult:F2} starBonus={starBonus:F2} => final={finalHealth:F1}");
         }
@@ -53,18 +53,18 @@ namespace MTMDifficulty
             var stars = attacker.GetLevel() - 1;
             var isBoss = attacker.m_boss;
 
-            var mult = isBoss ? MTMDifficulty.BossDamageMult.Value : MTMDifficulty.CreatureDamageMult.Value;
+            var mult = isBoss ? Plugin.BossDamageMult.Value : Plugin.CreatureDamageMult.Value;
             // Vanilla damage scales at 50% per star, and it has already been applied in the HitData so it needs to be
             // taken into account.
             var vanillaStarMult = 1f + (stars * 0.5f);
-            var desiredStarMult = 1f + (stars * 0.5f * MTMDifficulty.PerStarDamageMult.Value);
+            var desiredStarMult = 1f + (stars * 0.5f * Plugin.PerStarDamageMult.Value);
             var totalMult = mult * (desiredStarMult / vanillaStarMult);
 
             var before = hit.m_damage;
             hit.ApplyModifier(totalMult);
             var after = hit.m_damage;
 
-            if (MTMDifficulty.VerboseLogging.Value)
+            if (Plugin.VerboseLogging.Value)
             {
                 // Log the individual damage components, particularly to highlight that chop and pickaxe are also
                 // multiplied--they contribute to the value of HitData.GetTotalDamage(), but aren't usually
@@ -91,7 +91,7 @@ namespace MTMDifficulty
                 }
                 var breakdown = string.Join("\n", lines);
  
-                MTMDifficulty.Log.LogInfo(
+                Plugin.Log.LogInfo(
                     $"[DMG PATCHED] attacker={attacker.name} stars={stars} isBoss={isBoss} " +
                     $"mult={mult:F2} starBonus={desiredStarMult:F2} totalMult={totalMult:F2}\n" +
                     $"{breakdown}");

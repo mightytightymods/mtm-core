@@ -1,6 +1,6 @@
 ﻿{
-  "name": "MTM Difficulty",
-  "description": "Global multipliers for creature and boss health.",
+  "name": "MTM Core",
+  "description": "Assorted small mods for private server",
   "version_number": "0.1.0",
   "website_url": "https://github.com/mightytightymods/mtm-difficulty",
   "dependencies": [

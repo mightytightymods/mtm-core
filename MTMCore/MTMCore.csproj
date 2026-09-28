@@ -1,13 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
+<!--    <TargetFramework>net462</TargetFramework>-->
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <LangVersion>10</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <PackageId>MTMDifficulty</PackageId>
+    <PackageId>MTMCore</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -27,6 +28,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Libs\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NewtonsoftJsonDetector">
+      <HintPath>Libs\NewtonsoftJsonDetector.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -34,10 +43,31 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlDotNet">
+      <HintPath>Libs\YamlDotNet.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="YamlDotNetDetector">
+      <HintPath>Libs\YamlDotNetDetector.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JotunnLib" Version="2.30.0" />
+    <Reference Include="More_World_Locations_AIO">
+      <HintPath>Libs\More_World_Locations_AIO.dll</HintPath>
+      <Private>False</Private>
+      <Aliases>global</Aliases>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="JotunnLib" Version="2.30.0"  />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Libs\" />
   </ItemGroup>
   
   <PropertyGroup>
